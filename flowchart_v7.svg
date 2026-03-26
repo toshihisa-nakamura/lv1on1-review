@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="680" height="1520" viewBox="0 0 680 1520" xmlns="http://www.w3.org/2000/svg"
+  style="background:#ffffff; font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;">
+
+<!-- ===== 矢印を描くマクロ的な定義なし版 =====
+     全ての矢印を line + polygon で直接描く -->
+
+<!-- 凡例 -->
+<rect x="30" y="10" width="620" height="28" rx="4" fill="none" stroke="#CCCCCC" stroke-width="0.5"/>
+<rect x="38" y="17" width="11" height="11" rx="2" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="55" y="27" font-size="11" fill="#534AB7">センタースタッフ</text>
+<rect x="160" y="17" width="11" height="11" rx="2" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="177" y="27" font-size="11" fill="#0F6E56">Bコーチ</text>
+<rect x="242" y="17" width="11" height="11" rx="2" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.8"/>
+<text x="259" y="27" font-size="11" fill="#854F0B">クライアント</text>
+<rect x="360" y="17" width="11" height="11" rx="2" fill="#FAECE7" stroke="#993C1D" stroke-width="0.8"/>
+<text x="377" y="27" font-size="11" fill="#993C1D">判断</text>
+<rect x="420" y="17" width="11" height="11" rx="2" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.8"/>
+<text x="437" y="27" font-size="11" fill="#5F5E5A">開始/終了</text>
+
+<!-- ===== START ===== -->
+<rect x="255" y="50" width="170" height="34" rx="17" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="340" y="72" font-size="13" font-weight="bold" text-anchor="middle" fill="#2C2C2A">スタート</text>
+
+<!-- 矢印: START → STEP1 -->
+<line x1="340" y1="84" x2="340" y2="100" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,104 336,96 344,96" fill="#555555"/>
+
+<!-- ===== STEP1: JOB作成 ===== -->
+<rect x="210" y="104" width="260" height="52" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="340" y="125" font-size="13" font-weight="bold" text-anchor="middle" fill="#3C3489">① JOB作成</text>
+<text x="340" y="143" font-size="11" text-anchor="middle" fill="#534AB7">イベント名・期間・クライアント人数を設定</text>
+<!-- 役割ラベル -->
+<text x="90" y="124" font-size="11" text-anchor="middle" fill="#AAAAAA">センター</text>
+<text x="90" y="138" font-size="11" text-anchor="middle" fill="#AAAAAA">スタッフ</text>
+<line x1="118" y1="130" x2="208" y2="130" stroke="#CCCCCC" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+<!-- 矢印: STEP1 → STEP2 -->
+<line x1="340" y1="156" x2="340" y2="172" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,176 336,168 344,168" fill="#555555"/>
+
+<!-- ===== STEP2: コーチ入力リンク発行 ===== -->
+<rect x="210" y="176" width="260" height="52" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="340" y="197" font-size="13" font-weight="bold" text-anchor="middle" fill="#3C3489">② コーチ入力リンクを発行・送付</text>
+<text x="340" y="215" font-size="11" text-anchor="middle" fill="#534AB7">GAS WebアプリURLをBコーチチームに送付</text>
+
+<!-- 矢印: STEP2 → STEP3 -->
+<line x1="340" y1="228" x2="340" y2="244" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,248 336,240 344,240" fill="#555555"/>
+
+<!-- ===== STEP3: コーチ日程入力 ===== -->
+<rect x="210" y="248" width="260" height="90" rx="4" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="340" y="269" font-size="13" font-weight="bold" text-anchor="middle" fill="#085041">③ コーチが対応日程を入力</text>
+<text x="340" y="287" font-size="11" text-anchor="middle" fill="#0F6E56">名前選択・日付・開始時間を入力</text>
+<text x="340" y="303" font-size="11" text-anchor="middle" fill="#0F6E56">終了時間は自動計算（+75分）</text>
+<text x="340" y="319" font-size="11" text-anchor="middle" fill="#0F6E56">→ 入力結果を本人にメール自動送信</text>
+<text x="340" y="330" font-size="10" text-anchor="middle" fill="#0F6E56">（メールアドレスはコーチマスタに事前登録）</text>
+<!-- 役割ラベル -->
+<text x="592" y="278" font-size="11" text-anchor="middle" fill="#AAAAAA">Bコーチ</text>
+<text x="592" y="292" font-size="11" text-anchor="middle" fill="#AAAAAA">チーム全員</text>
+<line x1="472" y1="285" x2="562" y2="285" stroke="#CCCCCC" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+<!-- 矢印: STEP3 → 判断1 -->
+<line x1="340" y1="338" x2="340" y2="356" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,360 336,352 344,352" fill="#555555"/>
+
+<!-- ===== 判断1: 入力期間内? ===== -->
+<polygon points="340,360 422,400 340,440 258,400" fill="#FAECE7" stroke="#993C1D" stroke-width="1.2"/>
+<text x="340" y="394" font-size="12" font-weight="bold" text-anchor="middle" fill="#712B13">入力期間内？</text>
+<text x="340" y="410" font-size="10" text-anchor="middle" fill="#993C1D">（タイマー）</text>
+
+<!-- 矢印: 判断1 Yes → STEP4 -->
+<line x1="340" y1="440" x2="340" y2="468" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,472 336,464 344,464" fill="#555555"/>
+<text x="350" y="459" font-size="11" fill="#555555">Yes</text>
+
+<!-- 矢印: 判断1 No → STEP3（戻り） -->
+<text x="204" y="386" font-size="10" text-anchor="end" fill="#BBBBBB">No（督促・延長）</text>
+<line x1="258" y1="400" x2="178" y2="400" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="178" y1="400" x2="178" y2="293" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="178" y1="293" x2="208" y2="293" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<polygon points="210,293 202,289 202,297" fill="#BBBBBB"/>
+
+<!-- ===== STEP4: 日程確定 ===== -->
+<rect x="210" y="472" width="260" height="66" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="340" y="493" font-size="13" font-weight="bold" text-anchor="middle" fill="#3C3489">④ コーチング日程を確定</text>
+<text x="340" y="511" font-size="11" text-anchor="middle" fill="#534AB7">必要枠数に絞り込み・手動調整</text>
+<text x="340" y="527" font-size="11" text-anchor="middle" fill="#534AB7">コーチ数 × ceil（人数 ÷ コーチ数）</text>
+<!-- 役割ラベル -->
+<text x="90" y="496" font-size="11" text-anchor="middle" fill="#AAAAAA">センター</text>
+<text x="90" y="510" font-size="11" text-anchor="middle" fill="#AAAAAA">スタッフ</text>
+<line x1="118" y1="503" x2="208" y2="503" stroke="#CCCCCC" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+<!-- 矢印: STEP4 → STEP5 -->
+<line x1="340" y1="538" x2="340" y2="554" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,558 336,550 344,550" fill="#555555"/>
+
+<!-- ===== STEP5: 予約リンク発行 ===== -->
+<rect x="210" y="558" width="260" height="66" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="340" y="579" font-size="13" font-weight="bold" text-anchor="middle" fill="#3C3489">⑤ クライアントに予約リンク送付</text>
+<text x="340" y="597" font-size="11" text-anchor="middle" fill="#534AB7">空き枠のみ表示（日時のみ・コーチ名なし）</text>
+<text x="340" y="613" font-size="11" text-anchor="middle" fill="#534AB7">LN・氏名・メールアドレスを入力</text>
+
+<!-- 矢印: STEP5 → STEP6 -->
+<line x1="340" y1="624" x2="340" y2="640" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,644 336,636 344,636" fill="#555555"/>
+
+<!-- ===== STEP6: クライアント予約 ===== -->
+<rect x="210" y="644" width="260" height="130" rx="4" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.2"/>
+<text x="340" y="664" font-size="13" font-weight="bold" text-anchor="middle" fill="#633806">⑥ クライアントが日程を予約</text>
+<text x="340" y="681" font-size="11" text-anchor="middle" fill="#854F0B">希望日程を1つ選択</text>
+<text x="340" y="698" font-size="11" font-weight="bold" text-anchor="middle" fill="#633806">【確定】→ 仮予約ロック</text>
+<text x="340" y="712" font-size="10" text-anchor="middle" fill="#854F0B">　　　　 10分放置で自動解除</text>
+<text x="340" y="727" font-size="11" font-weight="bold" text-anchor="middle" fill="#1A7A5E">【取消】→ ロック解除・空きに戻す</text>
+<text x="340" y="742" font-size="11" font-weight="bold" text-anchor="middle" fill="#3C3489">【送信】→ 予約確定（確定後のみ活性）</text>
+<text x="592" y="668" font-size="11" text-anchor="middle" fill="#AAAAAA">LV受講生</text>
+<text x="592" y="682" font-size="11" text-anchor="middle" fill="#AAAAAA">（クライアント）</text>
+<line x1="472" y1="675" x2="562" y2="675" stroke="#CCCCCC" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+<!-- 矢印: STEP6 → 判断2 -->
+<line x1="340" y1="774" x2="340" y2="796" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,800 336,792 344,792" fill="#555555"/>
+
+<!-- ===== 判断2: 枠は空き? ===== -->
+<polygon points="340,800 422,840 340,880 258,840" fill="#FAECE7" stroke="#993C1D" stroke-width="1.2"/>
+<text x="340" y="834" font-size="12" font-weight="bold" text-anchor="middle" fill="#712B13">枠は空き？</text>
+<text x="340" y="850" font-size="10" text-anchor="middle" fill="#993C1D">（排他制御・同時アクセス対策）</text>
+
+<!-- 矢印: 判断2 Yes → STEP6b -->
+<line x1="340" y1="880" x2="340" y2="908" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,912 336,904 344,904" fill="#555555"/>
+<text x="350" y="899" font-size="11" fill="#555555">Yes（確定）</text>
+
+<!-- 矢印: 判断2 No → STEP6（戻り） -->
+<text x="466" y="827" font-size="10" fill="#BBBBBB">No（衝突）</text>
+<text x="466" y="841" font-size="10" fill="#BBBBBB">→ 画面に通知</text>
+<line x1="422" y1="840" x2="502" y2="786" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="502" y1="840" x2="502" y2="681" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="502" y1="681" x2="472" y2="681" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<polygon points="470,681 478,677 478,685" fill="#BBBBBB"/>
+
+<!-- ===== STEP6b: 完了メール ===== -->
+<rect x="210" y="912" width="260" height="52" rx="4" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.2"/>
+<text x="340" y="933" font-size="13" font-weight="bold" text-anchor="middle" fill="#633806">⑥′ 予約完了メールを自動送信</text>
+<text x="340" y="951" font-size="11" text-anchor="middle" fill="#854F0B">入力メールアドレス宛に自動送信（GAS）</text>
+
+<!-- 矢印: STEP6b → 判断3 -->
+<line x1="340" y1="964" x2="340" y2="980" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,984 336,976 344,976" fill="#555555"/>
+
+<!-- ===== 判断3: 予約期間内? ===== -->
+<polygon points="340,984 422,1024 340,1064 258,1024" fill="#FAECE7" stroke="#993C1D" stroke-width="1.2"/>
+<text x="340" y="1018" font-size="12" font-weight="bold" text-anchor="middle" fill="#712B13">予約期間内？</text>
+<text x="340" y="1034" font-size="10" text-anchor="middle" fill="#993C1D">（タイマー）</text>
+
+<!-- 矢印: 判断3 Yes → 判断4 -->
+<line x1="340" y1="1064" x2="340" y2="1092" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,1096 336,1088 344,1088" fill="#555555"/>
+<text x="350" y="1083" font-size="11" fill="#555555">Yes</text>
+
+<!-- 矢印: 判断3 No → STEP6（戻り） -->
+<text x="204" y="1010" font-size="10" text-anchor="end" fill="#BBBBBB">No（督促・延長）</text>
+<line x1="258" y1="1024" x2="170" y2="1024" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="170" y1="1024" x2="170" y2="681" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="170" y1="681" x2="208" y2="681" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<polygon points="210,681 202,677 202,685" fill="#BBBBBB"/>
+
+<!-- ===== 判断4: 全員完了? ===== -->
+<polygon points="340,1096 422,1136 340,1176 258,1136" fill="#FAECE7" stroke="#993C1D" stroke-width="1.2"/>
+<text x="340" y="1130" font-size="12" font-weight="bold" text-anchor="middle" fill="#712B13">全員予約完了？</text>
+<text x="340" y="1146" font-size="10" text-anchor="middle" fill="#993C1D">未予約クライアントあり？</text>
+
+<!-- 矢印: 判断4 Yes → STEP7 -->
+<line x1="340" y1="1176" x2="340" y2="1204" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,1208 336,1200 344,1200" fill="#555555"/>
+<text x="350" y="1194" font-size="11" fill="#555555">Yes（全員完了）</text>
+
+<!-- 矢印: 判断4 No → STEP6（戻り） -->
+<text x="204" y="1122" font-size="10" text-anchor="end" fill="#BBBBBB">No（督促・再送）</text>
+<line x1="258" y1="1136" x2="162" y2="1136" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="162" y1="1136" x2="162" y2="681" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<line x1="162" y1="681" x2="208" y2="681" stroke="#BBBBBB" stroke-width="1" stroke-dasharray="4 3"/>
+<polygon points="210,681 202,677 202,685" fill="#BBBBBB"/>
+
+<!-- ===== STEP7: 確定表出力 ===== -->
+<rect x="210" y="1208" width="260" height="66" rx="4" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="340" y="1229" font-size="13" font-weight="bold" text-anchor="middle" fill="#3C3489">⑦ 確定・日程調整表を出力</text>
+<text x="340" y="1247" font-size="11" text-anchor="middle" fill="#534AB7">日付・時間・LN・受講生名・コーチ名</text>
+<text x="340" y="1263" font-size="11" text-anchor="middle" fill="#534AB7">Zoom情報付き確定表を自動生成</text>
+<!-- 役割ラベル -->
+<text x="90" y="1232" font-size="11" text-anchor="middle" fill="#AAAAAA">センター</text>
+<text x="90" y="1246" font-size="11" text-anchor="middle" fill="#AAAAAA">スタッフ</text>
+<line x1="118" y1="1239" x2="208" y2="1185" stroke="#CCCCCC" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+<!-- 矢印: STEP7 → STEP8 -->
+<line x1="340" y1="1274" x2="340" y2="1290" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,1294 336,1286 344,1286" fill="#555555"/>
+
+<!-- ===== STEP8: チーム共有 ===== -->
+<rect x="210" y="1294" width="260" height="66" rx="4" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="340" y="1315" font-size="13" font-weight="bold" text-anchor="middle" fill="#2C2C2A">⑧ 日程表をチーム全員と共有</text>
+<text x="340" y="1333" font-size="11" text-anchor="middle" fill="#5F5E5A">コーチ・クライアント全員に送付</text>
+<text x="340" y="1349" font-size="11" text-anchor="middle" fill="#5F5E5A">（Zoom情報はこのタイミングで開示）</text>
+
+<!-- 矢印: STEP8 → END -->
+<line x1="340" y1="1360" x2="340" y2="1376" stroke="#555555" stroke-width="1.5"/>
+<polygon points="340,1380 336,1372 344,1372" fill="#555555"/>
+
+<!-- ===== END ===== -->
+<rect x="255" y="1380" width="170" height="34" rx="17" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+<text x="340" y="1402" font-size="13" font-weight="bold" text-anchor="middle" fill="#2C2C2A">完了</text>
+
+<!-- フッター -->
+<text x="340" y="1470" font-size="10" text-anchor="middle" fill="#BBBBBB">LV 1on1 日程調整アプリ — 業務フロー v5　© 2026 Toshihisa Nakamura</text>
+
+</svg>
