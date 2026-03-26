@@ -125,7 +125,7 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
   <!-- STEP1: 受講者情報 -->
   <div class="card" id="cardInfo">
     <div class="card-lbl">受講者情報</div>
-    <label class="f-lbl">受講番号（LN）</label>
+    <label class="f-lbl">LN番号（LN）</label>
     <input type="text" class="f-input" id="ln" placeholder="例：299" inputmode="numeric" oninput="onInput()">
     <label class="f-lbl">お名前</label>
     <input type="text" class="f-input" id="uname" placeholder="例：山田 太郎" oninput="onInput()">
@@ -270,7 +270,7 @@ function validateInfo() {
   var ln  = document.getElementById('ln').value.trim();
   var nm  = document.getElementById('uname').value.trim();
   var em  = document.getElementById('email').value.trim();
-  if (!ln)  { showErr('受講番号を入力してください'); document.getElementById('ln').focus(); return false; }
+  if (!ln)  { showErr('LN番号を入力してください'); document.getElementById('ln').focus(); return false; }
   if (!nm)  { showErr('お名前を入力してください'); document.getElementById('uname').focus(); return false; }
   if (!em || !em.includes('@')) { showErr('正しいメールアドレスを入力してください'); document.getElementById('email').focus(); return false; }
   hideErr();
