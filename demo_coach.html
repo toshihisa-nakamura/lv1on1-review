@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>日程入力 - デモ</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#1A7A5E;--g2:#E6F7F3;--g3:#A0D8CE;
+  --n:#0F1B35;--s:#F2F1EE;--st:#C8C5BC;
+  --i:#1C1C1E;--i2:#6B6B70;
+  --r:#D93025;--r2:#FEE8E6;
+  --w:#FFFFFF;
+  --sb:env(safe-area-inset-bottom,16px);
+}
+html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;font-size:16px;-webkit-tap-highlight-color:transparent}
+
+/* HEADER */
+.hdr{background:var(--n);color:#fff;padding:16px 16px 14px;position:sticky;top:0;z-index:50}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.hdr-title{font-size:17px;font-weight:700}
+.hdr-period{font-size:11px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:3px 10px;color:rgba(255,255,255,.85);white-space:nowrap}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,.55)}
+
+/* BODY */
+.body{padding:14px 12px 130px}
+
+/* CARD */
+.card{background:var(--w);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-lbl{font-size:11px;font-weight:700;color:var(--i2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+
+/* NAME */
+.name-wrap{display:flex;align-items:center;gap:10px}
+.name-lbl{font-size:14px;color:var(--i2);white-space:nowrap}
+.name-sel{flex:1;height:50px;padding:0 36px 0 14px;border:1.5px solid #DDD;border-radius:10px;font-size:16px;font-weight:600;color:var(--n);background:var(--w) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='%23E8892B'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;font-family:inherit}
+.name-sel:focus{outline:none;border-color:var(--g)}
+
+/* ROW CARD */
+.row-card{background:var(--s);border-radius:12px;padding:12px 14px;margin-bottom:10px;border:1.5px solid transparent;transition:border-color .15s}
+.row-card.filled{border-color:var(--g3);background:var(--g2)}
+.row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.row-num{font-size:11px;font-weight:700;color:var(--i2);background:var(--w);border-radius:8px;width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.row-card.filled .row-num{background:var(--g);color:#fff}
+.del-btn{width:28px;height:28px;border-radius:50%;border:none;background:var(--r2);color:var(--r);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+.row-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field-wrap{display:flex;flex-direction:column;gap:4px}
+.field-lbl{font-size:10px;font-weight:700;color:var(--i2);letter-spacing:.5px}
+
+.f-input{height:50px;width:100%;padding:0 10px;border:1.5px solid #DDD;border-radius:10px;font-size:16px;font-family:inherit;color:var(--n);background:var(--w);text-align:center;font-weight:500}
+.f-input:focus{outline:none;border-color:var(--g)}
+.f-input.ok{border-color:var(--g3);background:var(--g2);color:var(--g)}
+.f-input.err{border-color:var(--r);background:var(--r2)}
+
+.row-end{margin-top:8px;display:flex;align-items:center;gap:8px}
+.end-lbl{font-size:10px;font-weight:700;color:var(--i2);letter-spacing:.5px;white-space:nowrap}
+.end-val{flex:1;height:44px;background:var(--g2);border:1.5px solid var(--g3);border-radius:10px;font-size:16px;font-weight:700;color:var(--g);display:flex;align-items:center;justify-content:center}
+.end-val.empty{background:var(--s);border-color:#DDD;color:var(--st);font-weight:400;font-size:14px}
+
+.add-btn{width:100%;height:52px;background:var(--w);border:1.5px dashed var(--st);border-radius:12px;font-size:15px;color:var(--i2);font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px}
+
+/* ERR */
+.err-box{background:var(--r2);border:1px solid #F7C1C1;border-radius:10px;padding:10px 14px;font-size:13px;color:var(--r);margin-bottom:12px;display:none}
+.err-box.show{display:block}
+
+/* NOTE */
+.note{font-size:11px;color:var(--i2);line-height:1.8;padding:0 4px}
+
+/* FOOTER */
+.footer{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid #E8E8E8;padding:10px 12px calc(10px + var(--sb));display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:8px;z-index:100}
+.fbtn{height:52px;border-radius:12px;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s}
+.fbtn:active{transform:scale(.96)}
+.fbtn-save{background:var(--s);color:var(--n);border:1.5px solid var(--st)}
+.fbtn-save.lit{background:var(--n);color:#fff;border-color:var(--n)}
+.fbtn-done{background:var(--g2);color:var(--g);border:1.5px solid var(--g3)}
+.fbtn-done.lit{background:var(--g);color:#fff;border-color:var(--g)}
+.fbtn-submit{background:#DDD;color:var(--st);border:none;opacity:.5}
+.fbtn-submit.lit{background:var(--g);color:#fff;opacity:1;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(26,122,94,.4)}50%{box-shadow:0 0 0 7px rgba(26,122,94,0)}}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:20px}
+.overlay.show{display:flex}
+.ov-box{background:var(--w);border-radius:20px;padding:36px 24px;text-align:center;width:100%;max-width:320px}
+.ov-icon{font-size:52px}
+.ov-title{font-size:22px;font-weight:700;color:var(--n);margin:12px 0 8px}
+.ov-msg{font-size:14px;color:var(--i2);line-height:1.6}
+.ov-tag{display:inline-block;margin-top:12px;padding:4px 14px;background:#FEF3E6;border-radius:20px;font-size:11px;font-weight:700;color:#8A4B0A;letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-title">📋 日程入力</div>
+    <div class="hdr-period">04/22〜05/08</div>
+  </div>
+  <div class="hdr-sub">対応可能な日程を入力（75分）</div>
+</div>
+
+<div class="body">
+  <div class="err-box" id="errBox"></div>
+
+  <div class="card">
+    <div class="card-lbl">名前</div>
+    <div class="name-wrap">
+      <span class="name-lbl">Name</span>
+      <select class="name-sel" id="coachName">
+        <option value="">▼ 選択</option>
+        <option>あやこ</option>
+        <option>とし</option>
+        <option>かおりん</option>
+        <option>かよちゃん</option>
+        <option>にっちゃん</option>
+        <option>はっすー</option>
+        <option>ひろ</option>
+        <option>やまちゃん</option>
+        <option>やす</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-lbl">対応日程</div>
+    <div id="rows"></div>
+    <button class="add-btn" onclick="addRow()">
+      <span style="font-size:20px;line-height:1">＋</span>行を追加
+    </button>
+  </div>
+
+  <p class="note">
+    ・期間外の日付はエラーになります<br>
+    ・開始時間を入力すると終了時間が自動計算<br>
+    ・<span style="color:var(--r);font-weight:600">送信後の変更はスタッフに連絡</span>
+  </p>
+</div>
+
+<div class="footer">
+  <button class="fbtn fbtn-save" id="btnSave" onclick="doSave()">💾 保存</button>
+  <button class="fbtn fbtn-done" id="btnDone" onclick="doDone()">✓ 完了</button>
+  <button class="fbtn fbtn-submit" id="btnSubmit" onclick="doSubmit()">送信</button>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="ov-box">
+    <div class="ov-icon">✅</div>
+    <div class="ov-title">送信完了</div>
+    <div class="ov-msg">日程を受け付けました。<br>このページを閉じてください。</div>
+    <div class="ov-tag">※ これはデモです</div>
+  </div>
+</div>
+
+<script>
+var N = 0;
+var isDone = false;
+var START = '2026-04-22', END = '2026-05-08';
+
+// 初期3行
+addRow(); addRow(); addRow();
+
+function addRow(preset) {
+  N++;
+  var n = N;
+  var d = document.createElement('div');
+  d.className = 'row-card' + (preset ? ' filled' : '');
+  d.id = 'row_' + n;
+  d.innerHTML =
+    '<div class="row-top">' +
+      '<div class="row-num" id="rn_'+n+'">' + n + '</div>' +
+      '<button class="del-btn" onclick="delRow('+n+')">×</button>' +
+    '</div>' +
+    '<div class="row-fields">' +
+      '<div class="field-wrap">' +
+        '<div class="field-lbl">日付</div>' +
+        '<input type="date" class="f-input" id="dt_'+n+'"' +
+          (preset ? ' value="'+preset.d+'"' : '') +
+          ' onchange="onDt('+n+')">' +
+      '</div>' +
+      '<div class="field-wrap">' +
+        '<div class="field-lbl">開始</div>' +
+        '<input type="time" class="f-input" id="st_'+n+'"' +
+          (preset ? ' value="'+preset.s+'"' : '') +
+          ' onchange="onSt('+n+')">' +
+      '</div>' +
+    '</div>' +
+    '<div class="row-end">' +
+      '<div class="end-lbl">終了</div>' +
+      '<div class="end-val empty" id="et_'+n+'">－</div>' +
+    '</div>';
+  document.getElementById('rows').appendChild(d);
+  if (preset) { calcEnd(n, preset.s); markFilled(n); }
+}
+
+function delRow(n) {
+  var el = document.getElementById('row_'+n);
+  if(el) el.remove();
+  resetDone();
+}
+
+function onDt(n) {
+  var v = document.getElementById('dt_'+n).value;
+  var inp = document.getElementById('dt_'+n);
+  if(!v) return;
+  if(v < START || v > END) {
+    showErr('行'+n+'：期間外です（04/22〜05/08）');
+    inp.value=''; inp.className='f-input err';
+    resetDone(); return;
+  }
+  hideErr(); inp.className='f-input ok'; markFilled(n); resetDone();
+}
+
+function onSt(n) {
+  var v = document.getElementById('st_'+n).value;
+  var inp = document.getElementById('st_'+n);
+  if(!v){ calcEnd(n,null); resetDone(); return; }
+  if(v<'08:00'||v>'21:00'){
+    showErr('行'+n+'：08:00〜21:00 の範囲で入力してください');
+    inp.className='f-input err'; calcEnd(n,null); resetDone(); return;
+  }
+  hideErr(); inp.className='f-input ok'; calcEnd(n,v); markFilled(n); resetDone();
+}
+
+function calcEnd(n, s) {
+  var el = document.getElementById('et_'+n);
+  if(!s){ el.textContent='－'; el.className='end-val empty'; return; }
+  var p=s.split(':'), tot=+p[0]*60+ +p[1]+75;
+  var h=Math.floor(tot/60)%24, m=tot%60;
+  el.textContent=('0'+h).slice(-2)+':'+('0'+m).slice(-2);
+  el.className='end-val';
+}
+
+function markFilled(n) {
+  var dt=document.getElementById('dt_'+n);
+  var st=document.getElementById('st_'+n);
+  var card=document.getElementById('row_'+n);
+  var rn=document.getElementById('rn_'+n);
+  if(dt&&dt.value&&st&&st.value){
+    card.classList.add('filled');
+    rn.style.background='var(--g)'; rn.style.color='#fff';
+  }
+}
+
+function doSave() {
+  if(!validate()) return;
+  document.getElementById('btnSave').classList.add('lit');
+  // デモ: 実際はgoogle.script.run.saveCoachDraft()
+  showErr('※ デモのため保存はされません'); // デモ用メッセージ
+  setTimeout(hideErr, 2000);
+}
+
+function doDone() {
+  if(!validate()) return;
+  isDone=true;
+  document.getElementById('btnDone').classList.add('lit');
+  var sb=document.getElementById('btnSubmit');
+  sb.classList.add('lit');
+  sb.textContent='📨 送信';
+}
+
+function doSubmit() {
+  if(!isDone) return;
+  if(!validate()) return;
+  // デモ: 実際はgoogle.script.run.submitCoachSchedule()
+  document.getElementById('overlay').classList.add('show');
+}
+
+function validate() {
+  if(!document.getElementById('coachName').value){
+    showErr('名前を選択してください'); return false;
+  }
+  var ok=false;
+  for(var i=1;i<=N;i++){
+    var dt=document.getElementById('dt_'+i);
+    var st=document.getElementById('st_'+i);
+    if(!dt||!st) continue;
+    if(dt.value&&st.value){ ok=true; break; }
+  }
+  if(!ok){ showErr('日程を1つ以上入力してください'); return false; }
+  hideErr(); return true;
+}
+
+function resetDone() {
+  isDone=false;
+  document.getElementById('btnDone').classList.remove('lit');
+  var sb=document.getElementById('btnSubmit');
+  sb.classList.remove('lit');
+  sb.textContent='送信';
+}
+
+function showErr(m){
+  var el=document.getElementById('errBox');
+  el.textContent='⚠ '+m; el.classList.add('show');
+}
+function hideErr(){ document.getElementById('errBox').classList.remove('show'); }
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LV 1on1 日程調整アプリ — デザインレビュー</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --n:#0F1B35;--n2:#1A2B4A;
+  --p:#3D5A99;--p2:#EEF0F9;
+  --g:#1A7A5E;--g2:#E6F7F3;
+  --a:#D4720A;--a2:#FEF3E6;
+  --s:#F2F1EE;--st:#C8C5BC;
+  --i:#1C1C1E;--i2:#6B6B70;--i3:#AEADB5;
+  --w:#FFFFFF;
+  --sb:env(safe-area-inset-bottom,16px);
+}
+html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;-webkit-tap-highlight-color:transparent}
+.hero{background:var(--n);color:#fff;padding:40px 20px 36px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(91,143,212,.2) 0%,transparent 70%)}
+.hero-tag{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:18px}
+.hero h1{font-size:26px;font-weight:700;line-height:1.25;margin-bottom:10px}
+.hero h1 span{color:#7AACF0}
+.hero p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:320px;margin:0 auto 20px}
+.hero-ver{font-size:11px;color:rgba(255,255,255,.3)}
+.body{padding:20px 16px calc(24px + var(--sb))}
+.sec-title{font-size:11px;font-weight:700;color:var(--i3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-left:2px}
+.flow-card{background:var(--w);border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.flow-title{font-size:15px;font-weight:700;color:var(--n);margin-bottom:14px}
+.flow-step{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.flow-step:last-child{margin-bottom:0}
+.flow-num{width:28px;height:28px;border-radius:50%;background:var(--n);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.flow-num.g{background:var(--g)}.flow-num.a{background:var(--a)}
+.flow-who{font-size:10px;font-weight:700;letter-spacing:.5px;margin-bottom:3px}
+.flow-who.staff{color:var(--p)}.flow-who.coach{color:var(--g)}.flow-who.client{color:var(--a)}
+.flow-text{font-size:14px;color:var(--i);line-height:1.5}
+.divider{height:1px;background:#E8E5E0;margin:20px 0}
+.demo-card{background:var(--w);border-radius:16px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.demo-hdr{padding:18px 18px 0}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+.badge-staff{background:var(--p2);color:var(--p)}.badge-coach{background:var(--g2);color:var(--g)}.badge-client{background:var(--a2);color:var(--a)}
+.demo-title{font-size:18px;font-weight:700;color:var(--n);margin-bottom:6px}
+.demo-desc{font-size:13px;color:var(--i2);line-height:1.65;margin-bottom:16px}
+.check-wrap{padding:14px 18px;background:var(--s);border-top:1px solid #ECEAE6}
+.check-lbl{font-size:10px;font-weight:700;color:var(--i3);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.check-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;color:var(--i2);line-height:1.5}
+.check-item:last-child{margin-bottom:0}
+.check-circle{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--st);flex-shrink:0;margin-top:1px}
+.cta{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;color:#fff;text-decoration:none;font-size:15px;font-weight:700;border-top:1px solid rgba(255,255,255,.05);-webkit-tap-highlight-color:transparent}
+.cta:active{filter:brightness(.9)}
+.cta-l{display:flex;align-items:center;gap:10px}
+.cta-icon{font-size:20px}
+.cta-arrow{font-size:18px;opacity:.6}
+.cta.navy{background:var(--n)}.cta.green{background:var(--g)}.cta.amber{background:var(--a)}
+.fb-card{background:var(--w);border-radius:16px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.fb-title{font-size:15px;font-weight:700;color:var(--n);margin-bottom:6px}
+.fb-desc{font-size:13px;color:var(--i2);line-height:1.65;margin-bottom:14px}
+.fb-q{background:var(--s);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;color:var(--i);line-height:1.6}
+.fb-q::before{content:'Q. ';font-weight:700;color:var(--p)}
+.pg-footer{text-align:center;padding:20px 0 8px;font-size:11px;color:var(--i3)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Design Review v1.0</div>
+  <h1>LV 1on1<br><span>日程調整アプリ</span></h1>
+  <p>画面デザインのご確認をお願いします。各画面を開いてスマホで操作感を確かめてください。</p>
+  <div class="hero-ver">アクトリーダーシップセンター · 2026年3月</div>
+</div>
+
+<div class="body">
+
+  <div class="sec-title">業務フロー</div>
+  <div class="flow-card">
+    <div class="flow-title">全体の流れ</div>
+    <div class="flow-step"><div class="flow-num">1</div><div><div class="flow-who staff">センタースタッフ</div><div class="flow-text">JOB作成（イベント名・期間・人数を設定）</div></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div><div class="flow-who staff">センタースタッフ</div><div class="flow-text">コーチ入力リンクを発行・送付</div></div></div>
+    <div class="flow-step"><div class="flow-num g">3</div><div><div class="flow-who coach">Bコーチチーム全員</div><div class="flow-text">対応可能な日程を入力（Webアプリ）</div></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div><div class="flow-who staff">センタースタッフ</div><div class="flow-text">コーチング日程を確定・調整</div></div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div><div class="flow-who staff">センタースタッフ</div><div class="flow-text">クライアントに予約リンクを送付</div></div></div>
+    <div class="flow-step"><div class="flow-num a">6</div><div><div class="flow-who client">LV受講生（クライアント）</div><div class="flow-text">日程を選択・予約（確認メール自動送信）</div></div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div><div class="flow-who staff">センタースタッフ</div><div class="flow-text">確定表を出力・全員に共有して完了</div></div></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="sec-title">画面デモ</div>
+
+  <!-- コーチ -->
+  <div class="demo-card">
+    <div class="demo-hdr">
+      <div class="badge badge-coach">Bコーチ</div>
+      <div class="demo-title">コーチ 日程入力画面</div>
+      <div class="demo-desc">URLを開いて名前を選び、対応できる日付と開始時間を入力。終了時間（+75分）は自動計算。一時保存→完了→送信の3ステップ。</div>
+    </div>
+    <div class="check-wrap">
+      <div class="check-lbl">確認してほしいポイント</div>
+      <div class="check-item"><div class="check-circle"></div>名前プルダウンは使いやすいか</div>
+      <div class="check-item"><div class="check-circle"></div>日付・時間の入力はスムーズか</div>
+      <div class="check-item"><div class="check-circle"></div>行の追加・削除は分かりやすいか</div>
+      <div class="check-item"><div class="check-circle"></div>保存→完了→送信の流れは自然か</div>
+    </div>
+    <a class="cta green" href="demo_coach.html">
+      <div class="cta-l"><span class="cta-icon">📋</span><span>コーチ入力画面を開く</span></div>
+      <span class="cta-arrow">›</span>
+    </a>
+  </div>
+
+  <!-- クライアント -->
+  <div class="demo-card">
+    <div class="demo-hdr">
+      <div class="badge badge-client">LV受講生</div>
+      <div class="demo-title">クライアント 予約画面</div>
+      <div class="demo-desc">受講番号・氏名・メールアドレスを入力してから、希望の日程を1つ選んで予約。コーチ名は表示されません。予約後は確認メールが自動送信されます。</div>
+    </div>
+    <div class="check-wrap">
+      <div class="check-lbl">確認してほしいポイント</div>
+      <div class="check-item"><div class="check-circle"></div>入力→選択→確認の流れは分かるか</div>
+      <div class="check-item"><div class="check-circle"></div>日付・時間のみ表示で十分か</div>
+      <div class="check-item"><div class="check-circle"></div>「予約済」グレーアウトは分かるか</div>
+      <div class="check-item"><div class="check-circle"></div>メールアドレス入力に違和感はないか</div>
+    </div>
+    <a class="cta amber" href="demo_client_v2.html">
+      <div class="cta-l"><span class="cta-icon">📆</span><span>クライアント予約画面を開く</span></div>
+      <span class="cta-arrow">›</span>
+    </a>
+  </div>
+
+  <!-- 管理者 -->
+  <div class="demo-card">
+    <div class="demo-hdr">
+      <div class="badge badge-staff">センタースタッフ</div>
+      <div class="demo-title">管理者画面（全体デザイン）</div>
+      <div class="demo-desc">管理者・コーチ・クライアントの3画面をまとめて確認できます。PCでの閲覧推奨。</div>
+    </div>
+    <a class="cta navy" href="ui_mockup.html">
+      <div class="cta-l"><span class="cta-icon">🖥</span><span>全体デザインを開く</span></div>
+      <span class="cta-arrow">›</span>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- フロー図 -->
+  <div class="sec-title">業務フロー図</div>
+  <div class="flow-card">
+    <div class="flow-title">📊 業務フロー v4（全体の流れ）</div>
+    <div style="font-size:13px;color:var(--i2);line-height:1.65;margin-bottom:14px">スタートから完了までの全ステップ。判断分岐・タイマー・排他制御も含む完全版です。</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;border:1px solid #E8E5E0;">
+      <img src="flowchart_v5.svg" alt="業務フロー図" style="display:block;width:100%;min-width:340px;max-width:680px;">
+    </div>
+    <div style="font-size:11px;color:var(--i3);margin-top:10px;text-align:center;">横スクロールで全体を確認できます</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- フィードバック -->
+  <div class="sec-title">フィードバックのお願い</div>
+  <div class="fb-card">
+    <div class="fb-title">気になった点を教えてください</div>
+    <div class="fb-desc">実際にスマホで操作してみて、気になったことを中村までお知らせください。</div>
+    <div class="fb-q">使いにくい・分かりにくいと感じた箇所はどこですか？</div>
+    <div class="fb-q">入力の順番・流れは自然でしたか？</div>
+    <div class="fb-q">文字サイズやボタンの大きさは適切でしたか？</div>
+    <div class="fb-q">追加してほしい機能・情報はありますか？</div>
+    <div class="fb-q">「これは不要では？」と思った項目はありますか？</div>
+  </div>
+
+  <div class="pg-footer">LV 1on1 日程調整アプリ — UI Design Review v1.0<br>アクトリーダーシップセンター © 2026</div>
+
+</div>
+</body>
+</html>
