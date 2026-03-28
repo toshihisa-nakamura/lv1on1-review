@@ -58,11 +58,15 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 /* 選択中（仮予約前） */
 .slot.selecting{border-color:var(--a);background:var(--a2);box-shadow:0 0 0 3px rgba(212,114,10,.1)}
 
-/* 自分の予約済み */
-.slot.mine{border-color:var(--g);background:var(--g2)}
+/* 自分の仮予約（エントリー期間中）*/
+.slot.mine{border-color:var(--a);background:var(--a2)}
+/* 確定後（自分）*/
+.slot.confirmed-mine{border-color:#0A5C3A;background:#E8F5EE}
 
-/* 他人の予約済み */
-.slot.others{border-color:#DDD;background:#EDEBE8;opacity:.75}
+/* 他人の仮予約（エントリー期間中）*/
+.slot.others{border-color:var(--a3);background:#FFF8F0;opacity:.85}
+/* 確定後（他人）*/
+.slot.confirmed-others{border-color:#0A5C3A;background:#F0F9F5;opacity:.85}
 
 /* 仮予約ロック中 */
 .slot.locking{border-color:var(--p3);background:var(--p2)}
@@ -71,10 +75,11 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 
 .s-radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--st);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .slot.selecting .s-radio{border-color:var(--a);background:var(--a)}
-.slot.mine .s-radio{border-color:var(--g);background:var(--g)}
+.slot.mine .s-radio{border-color:var(--a);background:var(--a)}
+.slot.confirmed-mine .s-radio,.slot.confirmed-others .s-radio{border-color:#0A5C3A;background:#0A5C3A}
 .slot.locking .s-radio{border-color:var(--p);background:var(--p)}
 .s-dot{width:8px;height:8px;border-radius:50%;background:#fff;opacity:0;transition:opacity .15s}
-.slot.selecting .s-dot,.slot.mine .s-dot,.slot.locking .s-dot{opacity:1}
+.slot.selecting .s-dot,.slot.mine .s-dot,.slot.locking .s-dot,.slot.confirmed-mine .s-dot,.slot.confirmed-others .s-dot{opacity:1}
 
 .s-info{flex:1;min-width:0}
 .s-date{font-size:13px;font-weight:700;color:var(--n);margin-bottom:4px}
@@ -82,10 +87,11 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 
 /* バッジ */
 .s-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0}
-.badge-open   {background:var(--g2);color:var(--g);border:1px solid var(--g3)}
-.badge-mine   {background:var(--g);color:#fff}
-.badge-others {background:#EDEBE8;color:var(--st)}
-.badge-locking{background:var(--p2);color:var(--p);border:1px solid var(--p3)}
+.badge-open          {background:var(--g2);color:var(--g);border:1px solid var(--g3)}
+.badge-reserved-mine {background:var(--a);color:#fff}
+.badge-reserved-other{background:var(--a2);color:var(--a);border:1px solid var(--a3)}
+.badge-confirmed     {background:#0A5C3A;color:#fff}
+.badge-locking       {background:var(--p2);color:var(--p);border:1px solid var(--p3)}
 
 /* 予約者名表示エリア */
 .s-owner{
@@ -98,7 +104,8 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
   gap:8px;
 }
 .s-owner-name{font-weight:600;color:var(--n)}
-.slot.mine .s-owner{background:rgba(26,122,94,.06)}
+.slot.mine .s-owner{background:rgba(212,114,10,.06)}
+.slot.confirmed-mine .s-owner,.slot.confirmed-others .s-owner{background:rgba(10,92,58,.06)}
 .slot.others .s-owner{background:rgba(0,0,0,.03)}
 
 /* 自分の取消ボタン（枠内） */
@@ -171,7 +178,7 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 
 <!-- 締め切りロックバナー -->
 <div class="locked-banner" id="lockedBanner">
-  🔒 受付締め切り済み — 日程変更はセンタースタッフにご連絡ください
+  🔒 エントリー期間終了 — 全ての予約が「確定」になりました
 </div>
 
 <div class="hdr">
@@ -190,8 +197,8 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
   <!-- 受講者情報 -->
   <div class="card">
     <div class="card-lbl">受講者情報</div>
-    <label class="f-lbl">受講番号（LN）</label>
-    <input type="text" class="f-input" id="ln" placeholder="例：299" inputmode="numeric" oninput="onInput()">
+    <label class="f-lbl">LNナンバー</label>
+    <input type="text" class="f-input" id="ln" placeholder="例：299" inputmode="numeric" oninput="onInput()" style="margin-bottom:10px">
     <label class="f-lbl">お名前</label>
     <input type="text" class="f-input" id="uname" placeholder="例：山田 太郎" oninput="onInput()">
     <label class="f-lbl">メールアドレス</label>
@@ -203,13 +210,13 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
   <!-- タイマー -->
   <div class="timer-box" id="timerBox">
     <div style="font-size:20px;flex-shrink:0">⏱</div>
-    <div class="timer-text">仮予約中<br><span style="font-size:11px;font-weight:400">10分以内に【送信】してください</span></div>
+    <div class="timer-text">仮予約中<br><span style="font-size:11px;font-weight:400">10分以内に【送信】で仮予約を確保</span></div>
     <div class="timer-count" id="timerCount">10:00</div>
   </div>
 
   <!-- 案内 -->
   <div class="info-box" id="infoBox">
-    💡 予約済みの枠には受講者名が表示されます。締め切りまで、自分の予約を取り消して別の日程に変更できます。
+    💡 予約済みの枠（オレンジ）には受講者名が表示されます。<br>エントリー期間中は、自分の枠を【取消】して入れ替えできます。期間終了後は緑の「確定」になり変更不可です。
   </div>
 
   <!-- 枠リスト -->
@@ -220,14 +227,14 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 
   <!-- 確認ボックス -->
   <div class="confirm" id="confirmBox">
-    <div class="confirm-lbl">仮予約内容</div>
+    <div class="confirm-lbl">予約内容の確認</div>
     <div class="confirm-row"><span class="confirm-key">日時</span><span class="confirm-val" id="cv-date"></span></div>
     <div class="confirm-row"><span class="confirm-key">時間</span><span class="confirm-val" id="cv-time"></span></div>
     <div class="confirm-row"><span class="confirm-key">名前</span><span class="confirm-val" id="cv-name"></span></div>
     <div class="confirm-row"><span class="confirm-key">LN</span><span class="confirm-val" id="cv-ln"></span></div>
     <div class="confirm-row"><span class="confirm-key">メール</span><span class="confirm-val" id="cv-email" style="font-size:13px;word-break:break-all"></span></div>
     <div style="font-size:11px;color:var(--i2);margin-top:8px;padding-top:8px;border-top:1px solid var(--a3)">
-      【送信】で予約確定。【取消】でやり直せます。
+      【送信】で予約確保。エントリー期間中は【取消】でいつでも変更できます。
     </div>
   </div>
 
@@ -249,7 +256,7 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
     <div class="ov-title">予約完了！</div>
     <div class="ov-detail" id="ovDetail"></div>
     <div class="ov-email" id="ovEmail"></div>
-    <div class="ov-note">このページを閉じてください。</div>
+    <div class="ov-note">エントリー期間中は変更できます。<br>このページを閉じてください。</div>
     <div class="ov-tag">※ これはデモです</div>
   </div>
 </div>
@@ -259,14 +266,14 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 // status: 'open' / 'booked' / 'locking'
 // bookedBy: { ln, name } または null
 var SLOTS = [
-  {id:'S001', date:'2026/04/22', w:'水', st:'09:00', et:'10:15', status:'booked',  bookedBy:{name:'田中 花子', email:'hanako@example.com'}},
+  {id:'S001', date:'2026/04/22', w:'水', st:'09:00', et:'10:15', status:'reserved', bookedBy:{name:'田中 花子', email:'hanako@example.com'}},
   {id:'S002', date:'2026/04/23', w:'木', st:'15:15', et:'16:30', status:'open',    bookedBy:null},
-  {id:'S003', date:'2026/04/23', w:'木', st:'20:30', et:'21:45', status:'booked',  bookedBy:{name:'山田 太郎', email:'taro@example.com'}}, // ← デモ：名前＋メールが一致すると自分の枠
+  {id:'S003', date:'2026/04/23', w:'木', st:'20:30', et:'21:45', status:'reserved', bookedBy:{name:'山田 太郎', email:'taro@example.com'}}, // ← デモ：名前＋メールが一致すると自分の枠
   {id:'S004', date:'2026/04/24', w:'金', st:'11:00', et:'12:15', status:'open',    bookedBy:null},
-  {id:'S005', date:'2026/04/25', w:'土', st:'10:00', et:'11:15', status:'booked',  bookedBy:{name:'佐藤 次郎', email:'jiro@example.com'}},
+  {id:'S005', date:'2026/04/25', w:'土', st:'10:00', et:'11:15', status:'reserved', bookedBy:{name:'佐藤 次郎', email:'jiro@example.com'}},
   {id:'S006', date:'2026/04/26', w:'日', st:'19:30', et:'20:45', status:'open',    bookedBy:null},
   {id:'S007', date:'2026/05/01', w:'金', st:'10:00', et:'11:15', status:'open',    bookedBy:null},
-  {id:'S008', date:'2026/05/03', w:'日', st:'14:00', et:'15:15', status:'booked',  bookedBy:{name:'鈴木 美咲', email:'misaki@example.com'}},
+  {id:'S008', date:'2026/05/03', w:'日', st:'14:00', et:'15:15', status:'reserved', bookedBy:{name:'鈴木 美咲', email:'misaki@example.com'}},
   {id:'S009', date:'2026/05/06', w:'水', st:'16:45', et:'18:00', status:'open',    bookedBy:null},
   {id:'S010', date:'2026/05/07', w:'木', st:'09:00', et:'10:15', status:'open',    bookedBy:null},
 ];
@@ -290,28 +297,32 @@ function renderSlots() {
     var p = s.date.split('/');
     var dateStr = p[1]+'/'+p[2]+'（'+s.w+'）';
     var myEmail = document.getElementById('email').value.trim();
-    var isMine    = s.status === 'booked' && s.bookedBy &&
+    var isMine    = s.status === 'reserved' && s.bookedBy &&
                     s.bookedBy.name  === myName &&
                     s.bookedBy.email === myEmail;
-    var isOthers  = s.status === 'booked' && !isMine;
+    var isOthers  = s.status === 'reserved' && !isMine;
     var isOpen    = s.status === 'open';
     var isLocking = s.status === 'locking';
     var isSelecting = selected && selected.id === s.id && !isLocked;
 
     // クラス決定
     var cls = 'slot ';
-    if (isSelecting)   cls += 'selecting';
-    else if (isLocking)cls += 'locking';
-    else if (isMine)   cls += 'mine';
-    else if (isOthers) cls += 'others';
-    else               cls += 'open';
+    if (isSelecting)               cls += 'selecting';
+    else if (isLocking)            cls += 'locking';
+    else if (IS_LOCKED && isMine)  cls += 'confirmed-mine';
+    else if (IS_LOCKED && isOthers)cls += 'confirmed-others';
+    else if (isMine)               cls += 'mine';
+    else if (isOthers)             cls += 'others';
+    else                           cls += 'open';
 
     // バッジ
     var badgeCls, badgeTxt;
-    if (isLocking)     { badgeCls = 'badge-locking'; badgeTxt = '仮予約中'; }
-    else if (isMine)   { badgeCls = 'badge-mine';    badgeTxt = '予約済（自分）'; }
-    else if (isOthers) { badgeCls = 'badge-others';  badgeTxt = '予約済'; }
-    else               { badgeCls = 'badge-open';    badgeTxt = '空き'; }
+    if (isLocking)                 { badgeCls = 'badge-locking';        badgeTxt = '仮ロック中'; }
+    else if (IS_LOCKED && isMine)  { badgeCls = 'badge-confirmed';      badgeTxt = '確定（自分）'; }
+    else if (IS_LOCKED && isOthers){ badgeCls = 'badge-confirmed';      badgeTxt = '確定'; }
+    else if (isMine)               { badgeCls = 'badge-reserved-mine';  badgeTxt = '予約（自分）'; }
+    else if (isOthers)             { badgeCls = 'badge-reserved-other'; badgeTxt = '予約'; }
+    else                           { badgeCls = 'badge-open';           badgeTxt = '空き'; }
 
     var div = document.createElement('div');
     div.className = cls;
@@ -336,7 +347,9 @@ function renderSlots() {
         : s.bookedBy.name;
       var cancelBtn = '';
       if (isMine && !IS_LOCKED) {
-        cancelBtn = '<button class="btn-inline-cancel" onclick="doMineCancel(\''+s.id+'\')" '+(isLocked ? 'disabled' : '')+'>取消</button>';
+        cancelBtn = '<button class="btn-inline-cancel" onclick="doMineCancel(\''+s.id+'\')" '+(isLocked ? 'disabled' : '')+'>取消（予約期間中）</button>';
+      } else if (IS_LOCKED && isMine) {
+        cancelBtn = '<span style="font-size:11px;color:#0A5C3A;font-weight:700">🔒 確定済み</span>';
       }
       ownerHtml =
         '<div class="s-owner">'+
@@ -478,7 +491,7 @@ function doSoushin() {
   // 枠を確定済みに更新
   SLOTS.forEach(function(s) {
     if (s.id === selected.id) {
-      s.status   = 'booked';
+      s.status   = 'reserved';
       s.bookedBy = { name: myName, email: document.getElementById('email').value.trim() };
     }
   });

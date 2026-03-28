@@ -131,7 +131,7 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 
   <p class="note">
     ・期間外の日付はエラーになります<br>
-    ・開始時間を入力すると終了時間が自動計算<br>
+    ・時間を入力すると終了時間が自動計算（+75分）<br>
     ・<span style="color:var(--r);font-weight:600">送信後の変更はスタッフに連絡</span>
   </p>
 </div>
@@ -178,7 +178,7 @@ function addRow(preset) {
           ' onchange="onDt('+n+')">' +
       '</div>' +
       '<div class="field-wrap">' +
-        '<div class="field-lbl">開始</div>' +
+        '<div class="field-lbl">時間</div>' +
         '<input type="time" class="f-input" id="st_'+n+'"' +
           (preset ? ' value="'+preset.s+'"' : '') +
           ' onchange="onSt('+n+')">' +
