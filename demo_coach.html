@@ -23,6 +23,10 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 .hdr-period{font-size:11px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:3px 10px;color:rgba(255,255,255,.85);white-space:nowrap}
 .hdr-sub{font-size:12px;color:rgba(255,255,255,.55)}
 
+/* 送信済みバナー */
+.submitted-banner{background:var(--g);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;display:none}
+.submitted-banner.show{display:block}
+
 /* BODY */
 .body{padding:14px 12px 130px}
 
@@ -68,7 +72,11 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
 .note{font-size:11px;color:var(--i2);line-height:1.8;padding:0 4px}
 
 /* FOOTER */
-.footer{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid #E8E8E8;padding:10px 12px calc(10px + var(--sb));display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:8px;z-index:100}
+.footer{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid #E8E8E8;padding:10px 12px calc(10px + var(--sb));z-index:100}
+.footer-row{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:8px;margin-bottom:0}
+.footer-row2{margin-top:8px}
+.fbtn-cancel{width:100%;background:#FEE8E6;color:#D93025;border:1.5px solid #F7C1C1}
+.fbtn-cancel.active{background:#D93025;color:#fff;border-color:#D93025}
 .fbtn{height:52px;border-radius:12px;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s}
 .fbtn:active{transform:scale(.96)}
 .fbtn-save{background:var(--s);color:var(--n);border:1.5px solid var(--st)}
@@ -99,6 +107,10 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
   <div class="hdr-sub">対応可能な日程を入力（75分）</div>
 </div>
 
+<!-- 送信済みバナー -->
+<div class="submitted-banner" id="submittedBanner">
+  ✅ 送信済み — 修正する場合は内容を変更して再送信してください
+</div>
 <div class="body">
   <div class="err-box" id="errBox"></div>
 
@@ -132,21 +144,26 @@ html,body{background:var(--s);color:var(--i);font-family:-apple-system,'Hiragino
   <p class="note">
     ・期間外の日付はエラーになります<br>
     ・時間を入力すると終了時間が自動計算（+75分）<br>
-    ・<span style="color:var(--r);font-weight:600">送信後の変更はスタッフに連絡</span>
+    ・エントリー期間中は【取消】でいつでも変更できます<br>    ・<span style="color:var(--r);font-weight:600">エントリー終了後の変更はスタッフに連絡</span>
   </p>
 </div>
 
 <div class="footer">
-  <button class="fbtn fbtn-save" id="btnSave" onclick="doSave()">💾 保存</button>
-  <button class="fbtn fbtn-done" id="btnDone" onclick="doDone()">✓ 完了</button>
-  <button class="fbtn fbtn-submit" id="btnSubmit" onclick="doSubmit()">送信</button>
+  <div class="footer-row">
+    <button class="fbtn fbtn-save" id="btnSave" onclick="doSave()">💾 保存</button>
+    <button class="fbtn fbtn-done" id="btnDone" onclick="doDone()">✓ 確認</button>
+    <button class="fbtn fbtn-submit" id="btnSubmit" onclick="doSubmit()">📨 送信</button>
+  </div>
+  <div class="footer-row2" id="cancelRow" style="display:none">
+    <button class="fbtn fbtn-cancel" id="btnCancel" onclick="doCancel()">× 取消（変更可）</button>
+  </div>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="ov-box">
     <div class="ov-icon">✅</div>
     <div class="ov-title">送信完了</div>
-    <div class="ov-msg">日程を受け付けました。<br>このページを閉じてください。</div>
+    <div class="ov-msg">日程を受け付けました。<br>エントリー期間中は変更できます。</div>
     <div class="ov-tag">※ これはデモです</div>
   </div>
 </div>
@@ -156,8 +173,43 @@ var N = 0;
 var isDone = false;
 var START = '2026-04-22', END = '2026-05-08';
 
-// 初期3行
-addRow(); addRow(); addRow();
+// ===== デモ用：送信済みデータの復元 =====
+// 実際はgoogle.script.run.getCoachAppData()でサーバーから取得
+var SAVED_DATA = {
+  coachName: 'とし',
+  rows: [
+    {d:'2026-04-23', s:'15:15'},
+    {d:'2026-04-29', s:'10:00'},
+    {d:'2026-05-01', s:'17:30'},
+  ]
+};
+
+// 送信済みデータがあれば復元、なければ空行3つ
+if (SAVED_DATA && SAVED_DATA.coachName && SAVED_DATA.rows.length > 0) {
+  // コーチ名を選択状態に
+  var sel = document.getElementById('coachName');
+  for (var i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === SAVED_DATA.coachName) {
+      sel.selectedIndex = i;
+      break;
+    }
+  }
+  // 送信済み行を復元
+  SAVED_DATA.rows.forEach(function(r) { addRow(r); });
+  // 送信済みバナーを表示
+  isSubmitted = true;
+  document.getElementById('submittedBanner').classList.add('show');
+  document.getElementById('cancelRow').classList.add('show');
+  document.querySelector('.body').style.paddingBottom = '175px';
+  // 保存・完了ボタンを点灯
+  document.getElementById('btnSave').classList.add('lit');
+  document.getElementById('btnDone').classList.add('lit');
+  document.getElementById('btnSubmit').classList.add('lit');
+  document.getElementById('btnSubmit').textContent = '📨 再送信（上書き）';
+  isDone = true;
+} else {
+  addRow(); addRow(); addRow();
+}
 
 function addRow(preset) {
   N++;
@@ -262,7 +314,43 @@ function doSubmit() {
   if(!isDone) return;
   if(!validate()) return;
   // デモ: 実際はgoogle.script.run.submitCoachSchedule()
+  isSubmitted = true;
+  // 送信済みバナー表示
+  document.getElementById('submittedBanner').classList.add('show');
+  // リセット行を表示
+  document.getElementById('cancelRow').classList.add('show');
+  document.querySelector('.body').style.paddingBottom = '175px';
+  // ボタンラベルを「再送信」に変更
+  document.getElementById('btnSubmit').textContent = '📨 再送信（上書き）';
+  // オーバーレイ表示
   document.getElementById('overlay').classList.add('show');
+}
+
+var isSubmitted = false;
+
+function doReset() {
+  if(!isSubmitted) return;
+  if(!confirm('前回の送信内容を削除して入れ直しますか？\n\n削除後、新しい内容を入力して再送信してください。')) return;
+  isSubmitted = false;
+  isDone = false;
+  // 入力行をリセット
+  document.getElementById('rows').innerHTML = '';
+  N = 0;
+  addRow(); addRow(); addRow();
+  // ボタンリセット
+  document.getElementById('btnSave').classList.remove('lit');
+  document.getElementById('btnDone').classList.remove('lit');
+  var sb = document.getElementById('btnSubmit');
+  sb.classList.remove('lit');
+  sb.textContent = '送信';
+  // バナー・リセット行を隠す
+  document.getElementById('submittedBanner').classList.remove('show');
+  document.getElementById('cancelRow').classList.remove('show');
+  document.querySelector('.body').style.paddingBottom = '130px';
+  document.getElementById('btnSubmit').textContent = '送信';
+  // デモ: 実際はgoogle.script.run.cancelCoachSchedule()
+  showErr('削除しました。新しい日程を入力して再送信してください。');
+  setTimeout(hideErr, 3000);
 }
 
 function validate() {
@@ -285,7 +373,7 @@ function resetDone() {
   document.getElementById('btnDone').classList.remove('lit');
   var sb=document.getElementById('btnSubmit');
   sb.classList.remove('lit');
-  sb.textContent='送信';
+  sb.textContent = isSubmitted ? '📨 再送信（上書き）' : '送信';
 }
 
 function showErr(m){
